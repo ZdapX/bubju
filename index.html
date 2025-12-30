@@ -17,7 +17,7 @@
     body {
       background-color: var(--bg);
       color: white;
-      font-family: 'Space+Grotesk', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
@@ -51,20 +51,53 @@
     .rounded-40 {
       border-radius: 2.5rem;
     }
+    #error-display {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: black;
+      color: #ff0000;
+      padding: 2rem;
+      font-family: monospace;
+      display: none;
+      z-index: 9999;
+      overflow: auto;
+    }
   </style>
-<script type="importmap">
+  <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.3",
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "react-router-dom": "https://esm.sh/react-router-dom@7.1.5",
+    "lucide-react": "https://esm.sh/lucide-react@0.474.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.11.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.562.0"
+    "react/": "https://esm.sh/react@^19.2.3/"
   }
 }
 </script>
+  <script>
+    // Global error listener for Vercel Logs
+    window.onerror = function(message, source, lineno, colno, error) {
+      const errorMsg = `[Global Error]: ${message} at ${source}:${lineno}:${colno}`;
+      console.error(errorMsg);
+      const display = document.getElementById('error-display');
+      if (display) {
+        display.style.display = 'block';
+        display.innerHTML += `<p>${errorMsg}</p><pre>${error ? error.stack : ''}</pre>`;
+      }
+    };
+    window.onunhandledrejection = function(event) {
+      console.error('[Unhandled Rejection]:', event.reason);
+    };
+  </script>
 </head>
 <body>
+  <div id="error-display">
+    <h1 style="font-size: 2rem; margin-bottom: 1rem;">FATAL_SYSTEM_ERROR</h1>
+    <p>The application failed to initialize. Check logs for details.</p>
+    <hr style="border: 1px solid #333; margin: 1rem 0;">
+  </div>
   <div id="root"></div>
   <script type="module" src="index.tsx"></script>
 </body>
